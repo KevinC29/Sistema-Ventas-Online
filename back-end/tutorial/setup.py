@@ -14,6 +14,12 @@ requires = [
     'pyramid_jinja2',
     'pyramid_debugtoolbar',
     'waitress',
+    'alembic',
+    'pyramid_retry',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
 ]
 
 tests_require = [
@@ -23,9 +29,9 @@ tests_require = [
 ]
 
 setup(
-    name='sisVentasKC',
+    name='tutorial',
     version='0.0',
-    description='sisVentasKC',
+    description='tutorialSQL',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
         'Programming Language :: Python',
@@ -46,7 +52,10 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = sisVentasKC:main',
+            'main = tutorial:main',
+        ],
+        'console_scripts': [
+            'initialize_tutorial_db=tutorial.scripts.initialize_db:main',
         ],
     },
 )
