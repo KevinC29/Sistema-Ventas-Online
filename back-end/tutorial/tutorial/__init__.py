@@ -6,7 +6,10 @@ def main(global_config, **settings):
     """
     with Configurator(settings=settings) as config:
         config.include('pyramid_jinja2')
+        config.include('.security')
         config.include('.routes')
+        config.include('.routes_app')
         config.include('.models')
+        # config.include('.controllers')
         config.scan()
     return config.make_wsgi_app()

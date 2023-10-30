@@ -13,13 +13,13 @@ def setup_models(dbsession):
     Add or update models / fixtures in the database.
 
     """
-    editor = models.User(name='editor', role='editor')
-    editor.set_password('editor123')
-    dbsession.add(editor)
+    # editor = models.User(name='editor', role='editor')
+    # editor.set_password('editor123')
+    # dbsession.add(editor)
 
-    basic = models.User(name='basic', role='basic')
-    basic.set_password('basic123')
-    dbsession.add(basic)
+    # basic = models.User(name='basic', role='basic')
+    # basic.set_password('basic123')
+    # dbsession.add(basic)
 
     # page = models.Page(
     #     name='FrontPage',
@@ -29,29 +29,29 @@ def setup_models(dbsession):
 
     category = models.Category(
         id=uuid.uuid4(),  # Generar un UUID aleatorio para el ID
-        name="Carnes",
-        desc="Cualquier tipo de carne"
+        name="Mariscos",
+        desc="Cualquier tipo de marisco"
     )
-    product = models.Product(
-        id=uuid.uuid4(),  # Generar un UUID aleatorio para el ID
-        name="Product 1",
-        image="URL_imagen_1",
-        stock=10,
-        pvp=49.99,
-        category=category  # Asociamos el producto a la categoría previamente creada
-    )
+    # product = models.Product(
+    #     id=uuid.uuid4(),  # Generar un UUID aleatorio para el ID
+    #     name="Product 1",
+    #     image="URL_imagen_1",
+    #     stock=10,
+    #     pvp=49.99,
+    #     category=category  # Asociamos el producto a la categoría previamente creada
+    # )
 
-    client = models.Client(
-        id=uuid.uuid4(),  # Generar un UUID aleatorio para el ID
-        names="John",
-        surnames="Doe",
-        dni="1234567890",
-        address="123 Loja" # Establecer el género como MALE desde el Enum
-    )
+    # client = models.Client(
+    #     id=uuid.uuid4(),  # Generar un UUID aleatorio para el ID
+    #     names="John",
+    #     surnames="Doe",
+    #     dni="1234567890",
+    #     address="123 Loja" # Establecer el género como MALE desde el Enum
+    # )
 
     dbsession.add(category)
-    dbsession.add(product)
-    dbsession.add(client)
+    # dbsession.add(product)
+    # dbsession.add(client)
     # dbsession.add(page)
 
 

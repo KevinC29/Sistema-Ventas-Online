@@ -11,6 +11,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 requires = [
     'alembic',
     'bcrypt',
+    'docutils',
     'plaster_pastedeploy',
     'pyramid',
     'pyramid_debugtoolbar',
@@ -18,6 +19,7 @@ requires = [
     'pyramid_retry',
     'pyramid_tm',
     'SQLAlchemy',
+    # 'sqlalchemy_json',
     'transaction',
     'waitress',
     'zope.sqlalchemy',
