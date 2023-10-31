@@ -112,10 +112,10 @@ class Sale(Base):
     def sale_to_dict(self):
         return {
             # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
-            "date_joined": self.date_joined,
-            "subtotal": self.subtotal,
-            "iva": self.iva,
-            "total": self.total,
+            "date_joined": self.date_joined.isoformat(),
+            "subtotal": float(self.subtotal),
+            "iva": float(self.iva),
+            "total": float(self.total),
             "cli": self.client.client_to_dict(),
             "det": [det.detSale_to_dict() for det in self.created_detSales_sale]
         }
@@ -145,9 +145,9 @@ class DetSale(Base):
     def detSale_to_dict(self):
         return {
             # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
-            "price": self.price,
+            "price": float(self.price),
             "cant": self.cant,
-            "subtotal": self.subtotal,
+            "subtotal": float(self.subtotal),
             "prod": self.product.product_to_dict()
         }
 

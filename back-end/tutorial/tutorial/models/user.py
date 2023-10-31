@@ -4,9 +4,12 @@ from sqlalchemy import (
     Integer,
     Text,
 )
-
+from enum import Enum
 from .meta import Base
 
+class RoleEnum(Enum):
+    PERSON = 'person'
+    ADMIN = 'admin'
 
 class User(Base):
     __tablename__ = 'users'

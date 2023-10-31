@@ -15,7 +15,7 @@ requires = [
     'plaster_pastedeploy',
     'pyramid',
     'pyramid_debugtoolbar',
-    'pyramid_jinja2',
+    # 'pyramid_jinja2',
     'pyramid_retry',
     'pyramid_tm',
     'SQLAlchemy',

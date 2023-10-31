@@ -7,10 +7,8 @@ from ..models import models
 # @view_config(accept='application/json')
 @view_config(route_name='product_list', request_method='GET')
 def product_list(request):
-    try:
-        product_all = request.dbsession.query(models.Product).all()
-        products_json = product_to_json(product_all)
-        return Response(json=products_json, content_type='application/json')
-    except Exception as e:
-        response_data = []
-        return Response(json=response_data, content_type='application/json')
+    product_all = request.dbsession.query(models.Product).all()
+    if not product_all:
+        raise HTTPNotFound('No such page')        
+    products_json = product_to_json(product_all)
+    return Response(json=products_json, content_type='application/json', status=200)

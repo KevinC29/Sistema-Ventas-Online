@@ -1,13 +1,13 @@
-# from docutils.core import publish_parts
-# from html import escape
-# from pyramid.httpexceptions import (
-#     HTTPNotFound,
-#     HTTPSeeOther,
-# )
-# from pyramid.view import view_config
-# import re
+from docutils.core import publish_parts
+from html import escape
+from pyramid.httpexceptions import (
+    HTTPNotFound,
+    HTTPSeeOther,
+)
+from pyramid.view import view_config
+import re
 
-# from .. import models
+from .. import models
 
 
 # # regular expression used to find WikiWords
@@ -71,7 +71,7 @@
 #     save_url = request.route_url('add_page', pagename=pagename)
 #     return dict(pagename=pagename, pagedata='', save_url=save_url)
 
-from pyramid.view import view_config
+# from pyramid.view import view_config
 
 # Supongamos que tienes una función que servirá como tu vista
 @view_config(route_name='dashboard', renderer='tutorial:templates/mytemplate.jinja2')
