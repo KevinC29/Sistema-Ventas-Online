@@ -11,4 +11,4 @@ def product_list(request):
     if not product_all:
         raise HTTPNotFound('No such page')        
     products_json = product_to_json(product_all)
-    return Response(json=products_json, content_type='application/json', status=200)
+    return Response(body=products_json, content_type='application/json', charset='utf-8', status=200)

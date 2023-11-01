@@ -12,7 +12,7 @@ from ..controllers.category_controller import categoy_to_json
 from ..models import models
 
 # @view_config(accept='application/json')
-@view_config(route_name='category_list', request_method='GET', permission='view')
+@view_config(route_name='category_list', request_method='GET')
 def category_list(request):
     category_all = request.dbsession.query(models.Category).all()
     if not category_all:
@@ -20,66 +20,79 @@ def category_list(request):
     categories_json = categoy_to_json(category_all)
     return Response(json=categories_json, content_type='application/json', status=200)
     
-
-
-# json_data = request.json_body
 # La vista de creación de una categoría
 
-@view_config(route_name='category_create', request_method='POST', permission='create')
+@view_config(route_name='category_create', request_method='POST')
 def category_create(request):
-    user = request.identity
-    if user is None or user.role not in ('editor', 'basic'):
-        raise HTTPForbidden
-    else:
-        data = {}
-        body = request.params['body']
-        category = models.Category(name="ejemplo", desc=body)
-        request.dbsession.add(category)
-        next_url = request.route_url('dashboard')
-        return HTTPSeeOther(location=next_url)
-    
-    # try:
-    #     action = request.POST.get('action')
-    #     if action == 'add':
-    #         form = CategoryForm(request.POST)
-    #         if form.validate():
-    #             data = form.save()
-    #         else:
-    #             data['error'] = form.errors
-    #     else:
-    #         data['error'] = 'No ha ingresado a ninguna opción'
-    # except Exception as e:
-    #     data['error'] = str(e)
-    return Response(data)
+    try:
+        json_data = request.json_body
+        name = json_data.get('name')
+        desc = json_data.get('desc')
 
-# # La vista de actualización de una categoría
-# @view_config(route_name='category_update', request_method='POST')
-# def category_update(request):
-#     data = {}
-#     try:
-#         action = request.POST.get('action')
-#         if action == 'edit':
-#             category_id = int(request.matchdict['id'])
-#             category = Category.query.get(category_id)
-#             form = CategoryForm(request.POST)
-#             if form.validate():
-#                 data = form.save()
-#             else:
-#                 data['error'] = form.errors
-#         else:
-#             data['error'] = 'No ha ingresado a ninguna opción'
-#     except Exception as e:
-#         data['error'] = str(e)
-#     return Response(json=data)
+        if name is None or desc is None:
+            raise HTTPForbidden('No se puede crear una categoría sin nombre o descripción')
+        elif not isinstance(name, str) or not isinstance(desc, str):
+            raise HTTPForbidden('El tipo de dato de nombre o descripción no es válido')
 
-# # La vista de eliminación de una categoría
-# @view_config(route_name='category_delete', request_method='POST')
-# def category_delete(request):
-#     data = {}
-#     try:
-#         category_id = int(request.matchdict['id'])
-#         category = Category.query.get(category_id)
-#         category.delete()
-#     except Exception as e:
-#         data['error'] = str(e)
-#     return Response(json=data)
+        new_category = models.Category(
+            name=name,
+            desc=desc
+        )
+
+        request.dbsession.add(new_category)
+        request.dbsession.flush()
+        response = new_category.category_to_dict()
+        return Response(json=response, status=201)
+
+    except Exception as e:
+
+        return Response(str(e), content_type='text/plain', status=500)
+
+# La vista de actualización de una categoría
+@view_config(route_name='category_update', request_method='PUT')
+def category_update(request):
+    try:
+        category_id = request.matchdict['pk']
+        category = request.dbsession.query(models.Category).filter_by(id=category_id).one()
+        if category:
+            json_data = request.json_body
+            name = json_data.get('name')
+            desc = json_data.get('desc')
+
+            if name is None or desc is None:
+                raise HTTPForbidden('No se puede editar una categoría sin nombre o descripción')
+            elif not isinstance(name, str) or not isinstance(desc, str):
+                raise HTTPForbidden('El tipo de dato de nombre o descripción no es válido')
+                
+            category.name = name
+            category.desc = desc
+
+            request.dbsession.flush()
+            response = category.category_to_dict()
+
+            return Response(json=response, status=200)
+        else:
+            return Response({'Category not found'}, status=404)
+
+    except Exception as e:
+
+        return Response(str(e), content_type='text/plain', status=500)
+
+# La vista de eliminación de una categoría
+@view_config(route_name='category_delete', request_method='DELETE')
+def category_delete(request):
+    try:
+        category_id = request.matchdict['pk']
+        category = request.dbsession.query(models.Category).filter_by(id=category_id).one()
+        if category:
+            
+            request.dbsession.delete(category)
+            request.dbsession.flush()
+
+            return Response({'Category deleted successfully'}, status=204)
+        else:
+            return Response({'Category not found'}, status=404)
+
+    except Exception as e:
+
+        return Response(str(e), content_type='text/plain', status=500)

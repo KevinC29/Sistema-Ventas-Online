@@ -37,7 +37,7 @@ class Category(Base):
 
     def category_to_dict(self):
         return {
-            # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "name": self.name,
             "desc": self.desc
         }
@@ -59,7 +59,7 @@ class Product(Base):
 
     def product_to_dict(self):
         return {
-            # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "name": self.name,
             "image": self.image,
             "stock": self.stock,
@@ -111,7 +111,7 @@ class Sale(Base):
     
     def sale_to_dict(self):
         return {
-            # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "date_joined": self.date_joined.isoformat(),
             "subtotal": float(self.subtotal),
             "iva": float(self.iva),
@@ -144,7 +144,7 @@ class DetSale(Base):
 
     def detSale_to_dict(self):
         return {
-            # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "price": float(self.price),
             "cant": self.cant,
             "subtotal": float(self.subtotal),

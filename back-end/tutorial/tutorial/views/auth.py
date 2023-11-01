@@ -25,7 +25,9 @@ def login(request):
     if request.method == 'POST':
         print("Entro al post")
         try:
+            print(request.body)
             json_data = request.json_body
+            
             login = json_data.get('login')
             password = json_data.get('password')
         except ValueError:
@@ -38,7 +40,7 @@ def login(request):
         )
         print("Este es el token1")
         if user is not None and user.check_password(password):
-            csrf_token = new_csrf_token()
+            # csrf_token = new_csrf_token(request)
             headers = remember(request, user.id)
             # return HTTPSeeOther(location=next_url, headers=headers)
             message = 'OK'
@@ -46,13 +48,12 @@ def login(request):
             # print("Este es el token")
         else:
             message = 'Failed login'
-            status_code = 400   
-        message = 'Error'
+            status_code = 400 
     return Response(json_body={
                 'message': message,
                 'url': request.route_url('login'),
                 'login': login,
-                'token': csrf_token
+                # 'token': csrf_token
             }, status=status_code)
 
 
