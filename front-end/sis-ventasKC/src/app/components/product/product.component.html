@@ -1,0 +1,15 @@
+<ng-container *ngIf="product">
+    
+    <h2>{{ product.name }}</h2>
+    <!-- <p>ID: {{ product.id }}</p> -->
+    <p>Stock: {{ product.stock }}</p>
+    <p>Precio: {{ product.pvp }}</p>
+    <p>Categoría: {{ product.cat.name }} - {{ product.cat.desc }}</p>
+
+</ng-container>
+
+<ng-container *ngIf="!product">
+    
+    Producto no encontrado
+
+</ng-container>
