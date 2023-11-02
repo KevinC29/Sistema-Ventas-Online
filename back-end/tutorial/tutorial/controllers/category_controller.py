@@ -1,5 +1,8 @@
 import json
 
-def categoy_to_json(query_data):
+from .utils import response_json
+
+def collection_to_json(query_data):
     categories_dict = [category.category_to_dict() for category in query_data]
-    return json.dumps(categories_dict)
+    return response_json("Lista de categorias", categories_dict)
+

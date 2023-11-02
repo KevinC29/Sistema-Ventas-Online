@@ -76,6 +76,7 @@ class Client(Base):
     dni = Column(VARCHAR(10), unique=True, doc='DNI', nullable=False)
     address = Column(VARCHAR(150), default='Direccion N/A', doc='Dirección')
     gender = Column(ENUM(GenderEnum), default=GenderEnum.MALE, doc='Genero')
+    balance = Column(NUMERIC(9, 2), default=1000.00, doc='Saldo')
 
     def __str__(self):
         return self.get_full_name()
@@ -85,12 +86,13 @@ class Client(Base):
 
     def client_to_dict(self):
         return {
-            # "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "names": self.names,
             "surnames": self.surnames,
             "dni": self.dni,
             "address": self.address,
-            "gender": self.gender.value
+            "gender": self.gender.value,
+            "balance": round(float(self.balance),2)
         }
 
 
