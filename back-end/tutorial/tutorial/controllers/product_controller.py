@@ -20,7 +20,7 @@ def validate_data_type_product(name, image, stock, pvp, cat_id):
     is_image_valid = isinstance(image, str)
     is_stock_valid = isinstance(stock, int)
     is_pvp_valid = isinstance(pvp, (int, float))
-    is_cat_id_valid = isinstance(uuid.UUID(str(cat_id)) if isinstance(cat_id, str) else None, uuid.UUID)
+    is_cat_id_valid = isinstance(uuid.UUID(str(cat_id)), uuid.UUID) if isinstance(cat_id, str) else False
     validate_Type = not all([is_name_valid, is_image_valid, is_stock_valid, is_pvp_valid, is_cat_id_valid])
     return validate_Type
 
@@ -28,20 +28,22 @@ def validate_exist_product(request, product_id):
     product = request.dbsession.query(models.Product).filter_by(id=product_id).first()
     if not product:
         return True
-    else: 
+    else:
         return product
 
 def validate_exist_category(request, cat_id):
     category = request.dbsession.query(models.Category).filter_by(id=cat_id).first()
     if not category:
         return True
-    else: 
-        return category
+    else:
+        return False
     
 def validate_data_stock_product(stock):
     validate_Stock = not stock >= 0
     if validate_Stock:
         return True
+    else:
+        return False
 
 def validate_data_pvp_product(pvp):
     pvp_value = round(float(pvp),2)

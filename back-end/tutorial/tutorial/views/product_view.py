@@ -15,8 +15,6 @@ from ..controllers.product_controller import (
     delete_product
 )
 from ..models import models
-import uuid
-
 
 @view_config(route_name='product_list', request_method='GET')
 def product_list(request):
@@ -134,7 +132,7 @@ def product_create(request):
 def product_update(request):
     try:
         product_id = request.matchdict['pk']
-        product = request.dbsession.query(models.Product).filter_by(id=product_id).first()
+        product = validate_exist_product(request, product_id)
 
         json_data = request.json_body
 
@@ -144,7 +142,7 @@ def product_update(request):
         pvp = json_data.get('pvp')
         cat_id = json_data.get('cat_id')
 
-        if validate_exist_product(request, product_id) == True:
+        if product == True:
             return Response(
                 json={
                     "msg": "error product not found"

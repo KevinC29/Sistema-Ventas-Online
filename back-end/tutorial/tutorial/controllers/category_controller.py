@@ -14,6 +14,8 @@ def validate_exist_category(request, category_id):
     category = request.dbsession.query(models.Category).filter_by(id=category_id).first()
     if not category:
         return True
+    else:
+        return category
 
 def list_category(request):
     category_all = request.dbsession.query(models.Category).all()

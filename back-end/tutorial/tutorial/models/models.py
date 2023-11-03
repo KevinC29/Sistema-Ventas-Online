@@ -63,7 +63,7 @@ class Product(Base):
             "name": self.name,
             "image": self.image,
             "stock": self.stock,
-            "pvp": round(float(self.pvp)),
+            "pvp": round(float(self.pvp), 2),
             "cat": self.category.category_to_dict()
         }
 
@@ -79,10 +79,7 @@ class Client(Base):
     balance = Column(NUMERIC(9, 2), default=1000.00, doc='Saldo')
 
     def __str__(self):
-        return self.get_full_name()
-
-    def get_full_name(self):
-        return '{} {} / {}'.format(self.names, self.surnames, self.dni)
+        return self.names, self.surnames, self.dni
 
     def client_to_dict(self):
         return {
@@ -109,7 +106,7 @@ class Sale(Base):
     # det = relationship("DetSale", backref="sale")
 
     def __str__(self):
-        return self.cli_id.names
+        return self.client.names
     
     def sale_to_dict(self):
         return {
@@ -126,10 +123,9 @@ class Sale(Base):
         for det in self.created_detSales_sale:
             det.product.stock += det.cant
             request.dbsession.flush()
-        
+            request.dbsession.delete(det)
         request.dbsession.delete(self)
-        request.dbsession.commit()
-        request.dbsession.close()
+        request.dbsession.flush()
 
 
 class DetSale(Base):
@@ -145,7 +141,7 @@ class DetSale(Base):
     product = relationship("Product", backref="created_detSales_products")
     
     def __str__(self):
-        return self.prod_id.name
+        return self.product.name
 
     def detSale_to_dict(self):
         return {
@@ -155,14 +151,3 @@ class DetSale(Base):
             "subtotal": round(float(self.subtotal), 2),
             "prod": self.product.product_to_dict()
         }
-
-
-# class Page(Base):
-#     """ The SQLAlchemy declarative model class for a Page object. """
-#     __tablename__ = 'pages'
-#     id = Column(INTEGER, primary_key=True)
-#     name = Column(TEXT, nullable=False, unique=True)
-#     data = Column(TEXT, nullable=False)
-
-#     user_id = Column(ForeignKey('users.id'), nullable=False)
-#     creator = relationship('User', backref='created_pages')

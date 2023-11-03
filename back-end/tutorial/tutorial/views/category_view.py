@@ -159,7 +159,6 @@ def category_update(request):
                 }, 
                 status=500)
 
-
 @view_config(route_name='category_delete', request_method='DELETE')
 def category_delete(request):
     try:

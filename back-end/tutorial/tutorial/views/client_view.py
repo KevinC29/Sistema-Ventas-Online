@@ -15,7 +15,6 @@ from ..controllers.client_controller import (
 
 from ..models import models
 
-
 @view_config(route_name='client_list', request_method='GET')
 def client_list(request):
     try:
@@ -44,7 +43,6 @@ def client_list(request):
             },
             status=500
         )
-
 
 @view_config(route_name='client_create', request_method='POST')
 def client_create(request):
@@ -116,7 +114,6 @@ def client_create(request):
                     'msg': message
                 }, 
                 status=500)
-
 
 @view_config(route_name='client_update', request_method='PUT')
 def client_update(request):
@@ -198,7 +195,6 @@ def client_update(request):
                     'msg': message
                 }, 
                 status=500)
-
 
 @view_config(route_name='client_delete', request_method='DELETE')
 def client_delete(request):
