@@ -1,27 +1,41 @@
 from pyramid.response import Response
 from pyramid.view import view_config
 
+from ..controllers.client_controller import (
+    validate_data_none_client,
+    validate_data_type_client,
+    validate_data_gender_client,
+    validate_data_balance_client,
+    validate_exist_client,
+    list_client,
+    create_client,
+    update_client,
+    delete_client
+)
+
 from ..models import models
 
 
 @view_config(route_name='client_list', request_method='GET')
 def client_list(request):
     try:
-        client_all = request.dbsession.query(models.Client).all()
+        client_all = list_client(request)
 
-        if not client_all:
+        if client_all == True:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error client list empty"
                 }, 
                 status = 404
             )
         else:
-            clients_json = [client.client_to_dict() for client in client_all]
             return Response(
-                json = clients_json, 
+                json = client_all, 
                 status = 200
             )
+        
+        request.dbsession.close()
+            
     except Exception as e:
         message = str(e)
         return Response(
@@ -36,6 +50,7 @@ def client_list(request):
 def client_create(request):
     try:
         json_data = request.json_body
+        
         names = json_data.get('names')
         surnames = json_data.get('surnames')
         dni = json_data.get('dni')
@@ -43,54 +58,38 @@ def client_create(request):
         gender_value = json_data.get('gender')
         balance = json_data.get('balance')
 
-        validate_None = any(value is None for value in (names, surnames, dni, address, gender_value, balance))
-
-        if validate_None :
+        if validate_data_none_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
-                    "msg": "error"
+                    "msg": "error data none"
                 }, 
                 status=400
             )
-
-        is_names_valid = isinstance(names, str)
-        is_surnames_valid = isinstance(surnames, str)
-        is_dni_valid = isinstance(dni, str)
-        is_address_valid = isinstance(address, str)
-        is_balance_valid = isinstance(balance, (int, float))
-
-        validate_Type = not all([is_names_valid, is_surnames_valid, is_dni_valid, is_address_valid, is_balance_valid])
+        elif validate_data_type_client(names, surnames, dni, address, gender_value, balance):
+            return Response(
+                json={
+                    "msg": "error data type"
+                }, 
+                status=400
+            )
+        elif validate_data_gender_client(gender_value):
+            return Response(
+                json={
+                    "msg": "error data gender"
+                }, 
+                status=400
+            )
+        elif validate_data_balance_client(balance) == True:
+            return Response(
+                json={
+                    "msg": "error data balance negative"
+                }, 
+                status=400
+            )
+        else:
+            balance_value = validate_data_balance_client(balance)
         
-        if validate_Type :
-            return Response(
-                json={
-                    "msg": "error"
-                }, 
-                status=400
-            )
-
-        validate_gender = not gender_value in [e.value for e in models.GenderEnum]
-
-        if validate_gender:
-            return Response(
-                json={
-                    "msg": "error gender"
-                }, 
-                status=400
-            )
-            
-        new_client = models.Client(
-            names= names,
-            surnames= surnames,
-            dni= dni,
-            address = address,
-            gender= models.GenderEnum(gender_value),
-            balance= round(float(balance),2)
-        )
-
-        request.dbsession.add(new_client)
-        request.dbsession.flush()
-        response = new_client.client_to_dict()
+        response = create_client(request, names, surnames, dni, address, gender_value, balance_value)
 
         return Response(
             json={
@@ -99,6 +98,9 @@ def client_create(request):
             }, 
             status=201
         )
+
+        request.dbsession.commit()
+        request.dbsession.close()
 
     except Exception as e:
         message = str(e)
@@ -120,85 +122,67 @@ def client_create(request):
 def client_update(request):
     try:
         client_id = request.matchdict['pk']
-        client = request.dbsession.query(models.Client).filter_by(id=client_id).first()
+        client = validate_exist_client(request, client_id)
 
-        if not client:
+        json_data = request.json_body
+
+        names = json_data.get('names')
+        surnames = json_data.get('surnames')
+        dni = json_data.get('dni')
+        address = json_data.get('address')
+        gender_value = json_data.get('gender')
+        balance = json_data.get('balance')
+
+        if client == True:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error client not exist"
                 }, 
                 status = 404
             )
-        else:
-            json_data = request.json_body
-            names = json_data.get('names')
-            surnames = json_data.get('surnames')
-            dni = json_data.get('dni')
-            address = json_data.get('address')
-            gender_value = json_data.get('gender')
-            balance = json_data.get('balance')
-
-            validate_None = any(value is None for value in (names, surnames, dni, address, gender_value, balance))
-
-            if validate_None :
-                return Response(
-                    json={
-                        "msg": "error"
-                    }, 
-                    status=400
-                )
-
-            is_names_valid = isinstance(names, str)
-            is_surnames_valid = isinstance(surnames, str)
-            is_dni_valid = isinstance(dni, str)
-            is_address_valid = isinstance(address, str)
-            is_balance_valid = isinstance(balance, (float))
-
-            validate_Type = not all([is_names_valid, is_surnames_valid, is_dni_valid, is_address_valid, is_balance_valid])
-        
-            if validate_Type :
-                return Response(
-                    json={
-                        "msg": "error"
-                    }, 
-                    status=400
-                )
-
-            validate_gender = not gender_value in [e.value for e in models.GenderEnum]
-
-            if validate_gender:
-                return Response(
-                    json={
-                        "msg": "error gender"
-                    }, 
-                    status=400
-                )
-            
-            print(models.GenderEnum(gender_value))
-            if client.dni == dni:
-                client.names = names
-                client.surnames = surnames
-                client.address = address
-                client.gender = models.GenderEnum(gender_value)
-                client.balance = round(float(balance),2)
-            else:
-                client.names = names
-                client.surnames = surnames
-                client.dni = dni
-                client.address = address
-                client.gender = models.GenderEnum(gender_value)
-                client.balance = round(float(balance),2)
-
-            request.dbsession.flush()
-            response = client.client_to_dict()
-
+        elif validate_data_none_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
-                    "msg": "succes",
-                    "data": response
+                    "msg": "error data none"
                 }, 
-                status=200
+                status=400
             )
+        elif validate_data_type_client(names, surnames, dni, address, gender_value, balance):
+            return Response(
+                json={
+                    "msg": "error data type"
+                }, 
+                status=400
+            )
+        elif validate_data_gender_client(gender_value):
+            return Response(
+                json={
+                    "msg": "error data gender"
+                }, 
+                status=400
+            )
+        elif validate_data_balance_client(balance) == True:
+            return Response(
+                json={
+                    "msg": "error data balance negative"
+                }, 
+                status=400
+            )
+        else:
+            balance_value = validate_data_balance_client(balance)
+            
+        response = update_client(request, client, names, surnames, dni, address, gender_value, balance_value)
+
+        return Response(
+            json={
+                "msg": "succes",
+                "data": response
+            }, 
+            status=200
+        )
+
+        request.dbsession.commit()
+        request.dbsession.close()
 
     except Exception as e:
         message = str(e)
@@ -220,22 +204,23 @@ def client_update(request):
 def client_delete(request):
     try:
         client_id = request.matchdict['pk']
-        client = request.dbsession.query(models.Client).filter_by(id=client_id).first()
+        client = delete_client(request, client_id)
 
-        if not client:
+        if client:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error client not exist"
                 }, 
                 status = 404
             )
         else:
-            request.dbsession.delete(client)
-            request.dbsession.flush()
-
             return Response(
                 status = 204
             )
+
+        request.dbsession.commit()
+        request.dbsession.close()        
+            
     except Exception as e:
         message = str(e)
         return Response(

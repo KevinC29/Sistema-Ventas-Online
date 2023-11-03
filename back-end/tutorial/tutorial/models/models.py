@@ -47,11 +47,11 @@ class Product(Base):
     __tablename__ = 'product'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(VARCHAR(150), unique=True, doc='Nombre', nullable=False)
-    image = Column(VARCHAR(200), nullable=True, doc='Imagen')  # Guardaremos las url de las imagenes
+    image = Column(VARCHAR(200), nullable=True, doc='Imagen URL')  # Guardaremos las url de las imagenes
     stock = Column(INTEGER, default=0, doc='Stock')
     pvp = Column(NUMERIC(9, 2), default=0.00, doc='Precio de venta')
 
-    cat_id = Column(UUID(as_uuid=True), ForeignKey('category.id', ondelete="CASCADE"))
+    cat_id = Column(UUID(as_uuid=True), ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = relationship("Category", backref="created_products")
 
     def __str__(self):
@@ -63,7 +63,7 @@ class Product(Base):
             "name": self.name,
             "image": self.image,
             "stock": self.stock,
-            "pvp": float(self.pvp),
+            "pvp": round(float(self.pvp)),
             "cat": self.category.category_to_dict()
         }
 
@@ -104,7 +104,7 @@ class Sale(Base):
     iva = Column(NUMERIC(9, 2), default=0.00, doc='IVA')
     total = Column(NUMERIC(9, 2), default=0.00, doc='Total')
 
-    cli_id = Column(UUID(as_uuid=True), ForeignKey('client.id', ondelete="CASCADE"))
+    cli_id = Column(UUID(as_uuid=True), ForeignKey('client.id', ondelete="CASCADE"), nullable=False)
     client = relationship("Client", backref="created_sales")
     # det = relationship("DetSale", backref="sale")
 
@@ -115,18 +115,21 @@ class Sale(Base):
         return {
             "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "date_joined": self.date_joined.isoformat(),
-            "subtotal": float(self.subtotal),
-            "iva": float(self.iva),
-            "total": float(self.total),
+            "subtotal": round(float(self.subtotal), 2),
+            "iva": round(float(self.iva), 2),
+            "total": round(float(self.total), 2),
             "cli": self.client.client_to_dict(),
             "det": [det.detSale_to_dict() for det in self.created_detSales_sale]
         }
     
-    # def delete(self):
-    #     for det in self.created_detSales_sale:
-    #         det.product.stock += det.cant
-    #         det.product.save()
-    #     self.delete()
+    def delete(self, request):
+        for det in self.created_detSales_sale:
+            det.product.stock += det.cant
+            request.dbsession.flush()
+        
+        request.dbsession.delete(self)
+        request.dbsession.commit()
+        request.dbsession.close()
 
 
 class DetSale(Base):
@@ -136,8 +139,8 @@ class DetSale(Base):
     cant = Column(INTEGER, default=0, doc='Cantidad')
     subtotal = Column(NUMERIC(9, 2), default=0.00, doc='Subtotal')
 
-    sale_id = Column(UUID(as_uuid=True), ForeignKey('sale.id', ondelete="CASCADE"))
-    prod_id = Column(UUID(as_uuid=True), ForeignKey('product.id', ondelete="CASCADE"))
+    sale_id = Column(UUID(as_uuid=True), ForeignKey('sale.id', ondelete="CASCADE"), nullable=False)
+    prod_id = Column(UUID(as_uuid=True), ForeignKey('product.id', ondelete="CASCADE"), nullable=False)
     sale = relationship("Sale", backref="created_detSales_sale")
     product = relationship("Product", backref="created_detSales_products")
     
@@ -147,9 +150,9 @@ class DetSale(Base):
     def detSale_to_dict(self):
         return {
             "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
-            "price": float(self.price),
+            "price": round(float(self.price), 2),
             "cant": self.cant,
-            "subtotal": float(self.subtotal),
+            "subtotal": round(float(self.subtotal), 2),
             "prod": self.product.product_to_dict()
         }
 

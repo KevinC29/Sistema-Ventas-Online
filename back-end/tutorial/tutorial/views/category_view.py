@@ -4,6 +4,16 @@ from pyramid.httpexceptions import (
     HTTPForbidden,
     HTTPNotFound
 )
+
+from ..controllers.category_controller import (
+    validate_data_none_category, 
+    validate_data_type_category,
+    validate_exist_category,
+    list_category,
+    create_category,
+    update_category,
+    delete_category
+)
 # from pyramid.csrf import get_csrf_token
 # from pyramid.session import check_csrf_token
 from ..models import models
@@ -11,21 +21,23 @@ from ..models import models
 @view_config(route_name='category_list', request_method='GET')
 def category_list(request):
     try:
-        category_all = request.dbsession.query(models.Category).all()
-
-        if not category_all:
+        category_all = list_category(request)
+        
+        if category_all == True:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error category list empty"
                 }, 
                 status = 404
             )
         else:
-            categories_json = [category.category_to_dict() for category in category_all]
             return Response(
-                json = categories_json, 
+                json = category_all, 
                 status = 200
             )
+        
+        request.dbsession.close()
+        
     except Exception as e:
         message = str(e)
         return Response(
@@ -34,46 +46,31 @@ def category_list(request):
             },
             status=500
         )
-
     
 @view_config(route_name='category_create', request_method='POST')
 def category_create(request):
     try:
         json_data = request.json_body
+
         name = json_data.get('name')
         desc = json_data.get('desc')
-
-        validate_None = any(value is None for value in (name, desc))
-
-        if validate_None:
+        
+        if validate_data_none_category(name, desc):
             return Response(
                 json={
-                    "msg": "error"
+                    "msg": "error data none"
                 }, 
                 status=400
             )
-
-        is_name_valid = isinstance(name, str)
-        is_desc_valid = isinstance(desc, str)
-
-        validate_Type = not all([is_name_valid, is_desc_valid])
-
-        if validate_Type:
+        elif validate_data_type_category(name, desc):
             return Response(
                 json={
-                    "msg": "error"
+                    "msg": "error data type"
                 }, 
                 status=400
             )
             
-        new_category = models.Category(
-            name=name,
-            desc=desc
-        )
-
-        request.dbsession.add(new_category)
-        request.dbsession.flush()
-        response = new_category.category_to_dict()
+        response = create_category(request, name, desc)
 
         return Response(
             json={
@@ -82,6 +79,9 @@ def category_create(request):
             }, 
             status=201
         )
+
+        request.dbsession.commit()
+        request.dbsession.close()
 
     except Exception as e:
         message = str(e)
@@ -98,64 +98,51 @@ def category_create(request):
                 }, 
                 status=500)
 
-
 @view_config(route_name='category_update', request_method='PUT')
 def category_update(request):
     try:
         category_id = request.matchdict['pk']
-        category = request.dbsession.query(models.Category).filter_by(id=category_id).first()
+        category = validate_exist_category(request, category_id)
 
-        if not category:
+        json_data = request.json_body
+            
+        name = json_data.get('name')
+        desc = json_data.get('desc')
+
+        if category == True:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error category not exist"
                 }, 
                 status = 404
             )
-        else:
-            json_data = request.json_body
-            name = json_data.get('name')
-            desc = json_data.get('desc')
-
-            validate_None = any(value is None for value in (name, desc))
-
-            if validate_None:
-                return Response(
-                    json={
-                        "msg": "error"
-                    }, 
-                    status=400
-                )
-
-            is_name_valid = isinstance(name, str)
-            is_desc_valid = isinstance(desc, str)
-
-            validate_Type = not all([is_name_valid, is_desc_valid])
-
-            if validate_Type:
-                return Response(
-                    json={
-                        "msg": "error"
-                    }, 
-                    status=400
-                )
-
-            if category.name == name:
-                category.desc = desc
-            else:
-                category.name = name
-                category.desc = desc
-            
-            request.dbsession.flush()
-            response = category.category_to_dict()
-
+        elif validate_data_none_category(name, desc):
             return Response(
                 json={
-                    "msg": "succes",
-                    "data": response
+                    "msg": "error data none"
                 }, 
-                status=200
+                status=400
             )
+        elif validate_data_type_category(name, desc):
+            return Response(
+                json={
+                    "msg": "error data type"
+                }, 
+                status=400
+            )
+    
+        response = update_category(request, category, name, desc)
+
+        return Response(
+            json={
+                "msg": "succes",
+                "data": response
+            }, 
+            status=200
+        )
+
+        request.dbsession.commit()
+        request.dbsession.close()
 
     except Exception as e:
         message = str(e)
@@ -177,21 +164,23 @@ def category_update(request):
 def category_delete(request):
     try:
         category_id = request.matchdict['pk']
-        category = request.dbsession.query(models.Category).filter_by(id=category_id).first()
+        category = delete_category(request, category_id)
 
-        if not category:
+        if category:
             return Response(
                 json = {
-                    "msg" : "error"
+                    "msg" : "error category not exist"
                 }, 
                 status = 404
             )
         else:
-            request.dbsession.delete(category)
-            request.dbsession.flush()
             return Response(
                 status = 204
             )
+
+        request.dbsession.commit()
+        request.dbsession.close()
+            
     except Exception as e:
         message = str(e)
         return Response(
