@@ -29,7 +29,10 @@ def client_list(request):
             )
         else:
             return Response(
-                json = client_all, 
+                json = {
+                    "msg" : "succes",
+                    "data" : client_all
+                },
                 status = 200
             )
         

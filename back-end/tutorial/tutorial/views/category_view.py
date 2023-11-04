@@ -32,7 +32,10 @@ def category_list(request):
             )
         else:
             return Response(
-                json = category_all, 
+                json = {
+                    "msg" : "succes",
+                    "data" : category_all
+                }, 
                 status = 200
             )
         

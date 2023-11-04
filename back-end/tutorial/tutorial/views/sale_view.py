@@ -35,7 +35,10 @@ def sale_list(request):
             )
         else:
             return Response(
-                json = sale_all, 
+                json = {
+                    "msg" : "succes",
+                    "data" : sale_all
+                },
                 status = 200
             )
         

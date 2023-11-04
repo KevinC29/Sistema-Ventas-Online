@@ -30,7 +30,10 @@ def product_list(request):
             )
         else:
             return Response(
-                json = product_all, 
+                json = {
+                    "msg" : "succes",
+                    "data" : product_all
+                },
                 status = 200
             )
         
