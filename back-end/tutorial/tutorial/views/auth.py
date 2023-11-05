@@ -26,7 +26,7 @@ def login(request):
             next_url = request.route_url('dashboard')
             headers = remember(request, user.id)
             response = {
-                'message': 'OK',
+                'msg': 'OK',
                 'next_url': next_url
                 # 'token': csrf_token
             }
@@ -34,7 +34,7 @@ def login(request):
         else:
             next_url = request.route_url('login')
             response = {
-                'message': 'Failed login',
+                'msg': 'Failed login',
                 'next_url': next_url
                 # 'token': csrf_token
             }
@@ -57,7 +57,7 @@ def logout(request):
     print(request.method)
     if request.method != 'POST':
         response = {
-            'message': 'Failed Logout',
+            'msg': 'Failed Logout',
             'next_url': next_url
             # 'token': csrf_token
         }
@@ -66,7 +66,7 @@ def logout(request):
         next_url = request.route_url('login')
         headers = forget(request)
         response = {
-            'message': 'OK',
+            'msg': 'OK',
             'next_url': next_url
             # 'token': csrf_token
         }
@@ -79,5 +79,5 @@ def forbidden_view(exc, request):
         return HTTPSeeOther(location=next_url)
 
     request.response.status = 403
-    data = {'message': 'access denied'}
+    data = {'msg': 'access denied'}
     return data
