@@ -23,6 +23,7 @@ def client_list(request):
         if client_all == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error client list empty"
                 }, 
                 status = 404
@@ -30,6 +31,7 @@ def client_list(request):
         else:
             return Response(
                 json = {
+                    'status': True,
                     "msg" : "succes",
                     "data" : client_all
                 },
@@ -42,6 +44,7 @@ def client_list(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500
@@ -62,6 +65,7 @@ def client_create(request):
         if validate_data_none_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -69,6 +73,7 @@ def client_create(request):
         elif validate_data_type_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -76,6 +81,7 @@ def client_create(request):
         elif validate_data_gender_client(gender_value):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data gender"
                 }, 
                 status=400
@@ -83,6 +89,7 @@ def client_create(request):
         elif validate_data_balance_client(balance) == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data balance negative"
                 }, 
                 status=400
@@ -94,6 +101,7 @@ def client_create(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -108,12 +116,14 @@ def client_create(request):
         if 'llave duplicada' in message and 'uq_client_dni' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         else:
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -136,6 +146,7 @@ def client_update(request):
         if client == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error client not exist"
                 }, 
                 status = 404
@@ -143,6 +154,7 @@ def client_update(request):
         elif validate_data_none_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -150,6 +162,7 @@ def client_update(request):
         elif validate_data_type_client(names, surnames, dni, address, gender_value, balance):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -157,6 +170,7 @@ def client_update(request):
         elif validate_data_gender_client(gender_value):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data gender"
                 }, 
                 status=400
@@ -164,6 +178,7 @@ def client_update(request):
         elif validate_data_balance_client(balance) == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data balance negative"
                 }, 
                 status=400
@@ -175,6 +190,7 @@ def client_update(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -189,12 +205,14 @@ def client_update(request):
         if 'llave duplicada' in message and 'uq_client_dni' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         else:
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -208,12 +226,17 @@ def client_delete(request):
         if client:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error client not exist"
                 }, 
                 status = 404
             )
         else:
             return Response(
+                json = {
+                    'status': True,
+                    "msg" : "ok"
+                }, 
                 status = 204
             )
 
@@ -224,6 +247,7 @@ def client_delete(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500

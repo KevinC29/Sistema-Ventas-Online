@@ -16,7 +16,7 @@ from .. import models
 def login(request):
     try:
         json_data = request.json_body
-        username = json_data.get('user')
+        username = json_data.get('username')
         password = json_data.get('password')
 
         user = request.dbsession.query(models.User).filter_by(name=username).first()
@@ -26,14 +26,17 @@ def login(request):
             next_url = request.route_url('dashboard')
             headers = remember(request, user.id)
             response = {
-                'msg': 'OK',
-                'next_url': next_url
+                'status': True,
+                'msg': 'ok',
+                'next_url': next_url,
+                'data': user
                 # 'token': csrf_token
             }
             return Response(json=response, status=200, headers=headers)
         else:
             next_url = request.route_url('login')
             response = {
+                'status': False,
                 'msg': 'Failed login',
                 'next_url': next_url
                 # 'token': csrf_token
@@ -44,19 +47,21 @@ def login(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500
         )
 
 
-@view_config(route_name='logout', request_method='POST')
+@view_config(route_name='logout', request_method='GET')
 def logout(request):
     next_url = request.route_url('dashboard')
     # new_csrf_token(request)
     print(request.method)
-    if request.method != 'POST':
+    if request.method != 'GET':
         response = {
+            'status': False,
             'msg': 'Failed Logout',
             'next_url': next_url
             # 'token': csrf_token
@@ -66,7 +71,8 @@ def logout(request):
         next_url = request.route_url('login')
         headers = forget(request)
         response = {
-            'msg': 'OK',
+            'status': True,
+            'msg': 'ok',
             'next_url': next_url
             # 'token': csrf_token
         }

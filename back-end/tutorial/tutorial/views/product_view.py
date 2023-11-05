@@ -24,6 +24,7 @@ def product_list(request):
         if product_all == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error product list empty"
                 }, 
                 status = 404
@@ -31,6 +32,7 @@ def product_list(request):
         else:
             return Response(
                 json = {
+                    'status': True,
                     "msg" : "succes",
                     "data" : product_all
                 },
@@ -43,6 +45,7 @@ def product_list(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500
@@ -62,6 +65,7 @@ def product_create(request):
         if validate_data_none_product(name, image, stock, pvp, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -69,6 +73,7 @@ def product_create(request):
         elif validate_data_type_product(name, image, stock, pvp, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -76,6 +81,7 @@ def product_create(request):
         elif validate_url(image):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error img url not valid or not found"
                 }, 
                 status=404
@@ -83,6 +89,7 @@ def product_create(request):
         elif validate_exist_category(request, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error category not found"
                 }, 
                 status=404
@@ -90,6 +97,7 @@ def product_create(request):
         elif validate_data_stock_product(stock) or validate_data_pvp_product(pvp) == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data negative"
                 }, 
                 status=400
@@ -101,6 +109,7 @@ def product_create(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -115,18 +124,21 @@ def product_create(request):
         if 'llave duplicada' in message and 'uq_product_name' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         elif 'UUID' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'uuid error'
                 }, 
                 status=400)
         else :
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -148,6 +160,7 @@ def product_update(request):
         if product == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error product not found"
                 }, 
                 status=404
@@ -155,6 +168,7 @@ def product_update(request):
         elif validate_data_none_product(name, image, stock, pvp, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -162,6 +176,7 @@ def product_update(request):
         elif validate_data_type_product(name, image, stock, pvp, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -169,6 +184,7 @@ def product_update(request):
         elif validate_url(image):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error img url not valid or not found"
                 }, 
                 status=404
@@ -176,6 +192,7 @@ def product_update(request):
         elif validate_exist_category(request, cat_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error category not found"
                 }, 
                 status=404
@@ -183,6 +200,7 @@ def product_update(request):
         elif validate_data_stock_product(stock) or validate_data_pvp_product(pvp) == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data negative"
                 }, 
                 status=400
@@ -194,6 +212,7 @@ def product_update(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -208,18 +227,21 @@ def product_update(request):
         if 'llave duplicada' in message and 'uq_product_name' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         elif 'UUID' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'uuid error'
                 }, 
                 status=400)
         else :
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -233,12 +255,17 @@ def product_delete(request):
         if product:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error product not exist"
                 }, 
                 status = 404
             )
         else:
             return Response(
+                json = {
+                    'status': True,
+                    "msg" : "ok"
+                },
                 status = 204
             )
         
@@ -249,6 +276,7 @@ def product_delete(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500

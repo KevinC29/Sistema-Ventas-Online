@@ -29,6 +29,7 @@ def sale_list(request):
         if sale_all == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error sale list empty"
                 }, 
                 status = 404
@@ -36,6 +37,7 @@ def sale_list(request):
         else:
             return Response(
                 json = {
+                    'status': True,
                     "msg" : "succes",
                     "data" : sale_all
                 },
@@ -48,6 +50,7 @@ def sale_list(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500
@@ -68,6 +71,7 @@ def sale_create(request):
         if validate_data_none_sale(date_joined, subtotal, iva, total, cli_id, detalle):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -75,6 +79,7 @@ def sale_create(request):
         elif validate_data_type_sale(date_joined, subtotal, iva, total, cli_id, detalle):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -82,6 +87,7 @@ def sale_create(request):
         elif validate_exist_client(request, cli_id):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error client not found"
                 }, 
                 status=404
@@ -94,6 +100,7 @@ def sale_create(request):
         if (data_values_sale[0] or data_values_sale[1] or data_values_sale[2]) == True:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data negative"
                 }, 
                 status=400
@@ -104,6 +111,7 @@ def sale_create(request):
         if len(detalle) == 0:
             return Response(
                 json={
+                    'status': False,
                     "msg": "error lista de detalle vacia"
                 }, 
                 status=400
@@ -113,6 +121,7 @@ def sale_create(request):
             if value == True and 'product' in message:
                 return Response(
                         json={
+                            'status': False,
                             "msg": message
                         }, 
                         status=404
@@ -120,6 +129,7 @@ def sale_create(request):
             elif value == True:
                 return Response(
                         json={
+                            'status': False,
                             "msg": message
                         }, 
                         status=400
@@ -131,6 +141,7 @@ def sale_create(request):
         if value != data_values_sale[0]:
             return Response(
                     json={
+                        'status': False,
                         "msg": "error subtotal sale with sum detSale"
                     }, 
                     status=400
@@ -138,6 +149,7 @@ def sale_create(request):
         elif (data_values_sale[0] + iva_value) != data_values_sale[2]:
             return Response(
                     json={
+                        'status': False,
                         "msg": "error total with iva for subtotal"
                     }, 
                     status=400
@@ -145,6 +157,7 @@ def sale_create(request):
         elif validate_balance_client(request, cli_id, data_values_sale[2]):
             return Response(
                     json={
+                        'status': False,
                         "msg": "error balance client"
                     }, 
                     status=400
@@ -167,6 +180,7 @@ def sale_create(request):
 
             return Response(
                 json={
+                    'status': True,
                     "msg": "succes",
                     "data": response
                 }, 
@@ -197,12 +211,17 @@ def sale_delete(request):
         if sale:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error sale not exist"
                 }, 
                 status = 404
             )
         else:
             return Response(
+                json = {
+                    'status': True,
+                    "msg" : "ok"
+                }, 
                 status = 204
             )
 
@@ -213,6 +232,7 @@ def sale_delete(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500

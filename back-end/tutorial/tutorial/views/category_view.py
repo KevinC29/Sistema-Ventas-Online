@@ -26,6 +26,7 @@ def category_list(request):
         if category_all == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error category list empty"
                 }, 
                 status = 404
@@ -33,6 +34,7 @@ def category_list(request):
         else:
             return Response(
                 json = {
+                    'status': True,
                     "msg" : "succes",
                     "data" : category_all
                 }, 
@@ -61,6 +63,7 @@ def category_create(request):
         if validate_data_none_category(name, desc):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -68,6 +71,7 @@ def category_create(request):
         elif validate_data_type_category(name, desc):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -77,6 +81,7 @@ def category_create(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -91,12 +96,14 @@ def category_create(request):
         if 'llave duplicada' in message and 'uq_category_name' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         else:
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -115,6 +122,7 @@ def category_update(request):
         if category == True:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error category not exist"
                 }, 
                 status = 404
@@ -122,6 +130,7 @@ def category_update(request):
         elif validate_data_none_category(name, desc):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data none"
                 }, 
                 status=400
@@ -129,6 +138,7 @@ def category_update(request):
         elif validate_data_type_category(name, desc):
             return Response(
                 json={
+                    'status': False,
                     "msg": "error data type"
                 }, 
                 status=400
@@ -138,6 +148,7 @@ def category_update(request):
 
         return Response(
             json={
+                'status': True,
                 "msg": "succes",
                 "data": response
             }, 
@@ -152,12 +163,14 @@ def category_update(request):
         if 'llave duplicada' in message and 'uq_category_name' in message:
             return Response(
                 json={
+                    'status': False,
                     'msg': 'duplicate'
                 }, 
                 status=409)
         else:
             return Response(
                 json={
+                    'status': False,
                     'msg': message
                 }, 
                 status=500)
@@ -171,12 +184,17 @@ def category_delete(request):
         if category:
             return Response(
                 json = {
+                    'status': False,
                     "msg" : "error category not exist"
                 }, 
                 status = 404
             )
         else:
             return Response(
+                json = {
+                    'status': True,
+                    "msg" : "ok"
+                },
                 status = 204
             )
 
@@ -187,6 +205,7 @@ def category_delete(request):
         message = str(e)
         return Response(
             json={
+                'status': False,
                 "msg": message
             },
             status=500
