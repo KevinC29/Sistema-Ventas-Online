@@ -1,6 +1,6 @@
 export interface ResponseApi {
     status: boolean,
-    msg?: string,
+    msg: string,
     next_url?: string,
     data?: any
 }

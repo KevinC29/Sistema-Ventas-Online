@@ -18,8 +18,8 @@ export class LoginService {
   login(request: Login): Observable<ResponseApi> {
     return this.hhtp.post<ResponseApi>(`${this.url}/login`, request);
   }
-  logout(request: any): Observable<ResponseApi> {
-    return this.hhtp.post<ResponseApi>(`${this.url}/logout`, request);
+  logout(): Observable<ResponseApi> {
+    return this.hhtp.get<ResponseApi>(`${this.url}/logout`);
   }
 
 }

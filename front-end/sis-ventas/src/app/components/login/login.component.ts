@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { response } from 'express';
 import { Login } from 'src/app/interfaces/login';
 import { UtilsService } from 'src/app/reusable/utils.service';
-import { UserService } from 'src/app/services/user.service';
+import { LoginService } from 'src/app/Services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb :FormBuilder,
     private router : Router,
-    private _userService : UserService,
+    private _userService : LoginService,
     private _utilsService : UtilsService
   ) {
 
@@ -43,11 +44,21 @@ export class LoginComponent implements OnInit {
       password: this.form_login.value.password
     }
 
-    this._userService.login(request).subscibe({
-      next:(data)=>{
-        if(data.)
+    this._userService.login(request).subscribe({
+      next:(response)=>{
+        if(response.status){
+          this._utilsService.saveSesionUser(response.data);
+          this.router.navigate(["pages"])
+        }else{
+          this._utilsService.showAlert(response.msg, "Opps!")
+        }
+      },
+      complete: ()=>{
+          this.show_loading = false;
+      },
+      error: ()=>{
+        this._utilsService.showAlert("Existió un error", "Error");
       }
     })
   }
-
 }
