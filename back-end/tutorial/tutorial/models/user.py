@@ -33,5 +33,5 @@ class User(Base):
         return {
             "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
             "name": self.name,
-            "role": self.desc
+            "role": self.role
         }
