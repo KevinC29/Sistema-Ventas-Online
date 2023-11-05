@@ -28,3 +28,10 @@ class User(Base):
             expected_hash = self.password_hash.encode('utf8')
             return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
         return False
+
+    def user_to_dict(self):
+        return {
+            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "name": self.name,
+            "role": self.desc
+        }

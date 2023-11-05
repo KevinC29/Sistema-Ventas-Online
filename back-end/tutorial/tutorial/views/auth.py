@@ -29,7 +29,7 @@ def login(request):
                 'status': True,
                 'msg': 'ok',
                 'next_url': next_url,
-                'data': user
+                'data': user.user_to_dict()
                 # 'token': csrf_token
             }
             return Response(json=response, status=200, headers=headers)
