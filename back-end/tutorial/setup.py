@@ -21,7 +21,8 @@ requires = [
     'requests',
     'SQLAlchemy',
     'transaction',
-    'waitress',
+    'waitress',,
+    'wsgicors',
     'zope.sqlalchemy',
 ]
 

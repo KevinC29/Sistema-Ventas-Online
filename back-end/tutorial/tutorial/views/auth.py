@@ -20,11 +20,10 @@ def login(request):
         password = json_data.get('password')
 
         user = request.dbsession.query(models.User).filter_by(name=username).first()
-        
+
         if user is not None and user.check_password(password):
             # csrf_token = new_csrf_token(request)
             next_url = request.route_url('dashboard')
-            headers = remember(request, user.id)
             response = {
                 'status': True,
                 'msg': 'ok',
@@ -32,7 +31,7 @@ def login(request):
                 'data': user.user_to_dict()
                 # 'token': csrf_token
             }
-            return Response(json=response, status=200, headers=headers)
+            return Response(json=response, status=200)
         else:
             next_url = request.route_url('login')
             response = {
