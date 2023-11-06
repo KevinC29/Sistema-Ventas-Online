@@ -13,13 +13,13 @@ export class LoginService {
 
   private url: string = environment.url_api;
 
-  constructor(private hhtp:HttpClient) { }
+  constructor(private http:HttpClient) { }
 
   login(request: Login): Observable<ResponseApi> {
-    return this.hhtp.post<ResponseApi>(`${this.url}/login`, request);
+    return this.http.post<ResponseApi>(`${this.url}/login`, request);
   }
   logout(): Observable<ResponseApi> {
-    return this.hhtp.get<ResponseApi>(`${this.url}/logout`);
+    return this.http.get<ResponseApi>(`${this.url}/logout`);
   }
 
 }
