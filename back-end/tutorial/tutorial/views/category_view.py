@@ -195,7 +195,7 @@ def category_delete(request):
                     'status': True,
                     "msg" : "ok"
                 },
-                status = 204
+                status = 200
             )
 
         request.dbsession.commit()
