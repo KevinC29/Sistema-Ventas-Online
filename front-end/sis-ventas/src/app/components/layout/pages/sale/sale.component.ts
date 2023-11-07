@@ -121,6 +121,10 @@ export class SaleComponent implements OnInit{
   }
 
   addDetSale(){
+
+    if (this.productSelected.stock < this.form_product_sale.value.cant){
+      return this._utilsService.showAlert("No hay suficiente stock", 'Error');
+    }
     const _cant:number = this.form_product_sale.value.cant;
     const _price:number = this.productSelected.pvp;
     const _subtotal:number = +(_cant * _price).toFixed(2);
@@ -128,7 +132,7 @@ export class SaleComponent implements OnInit{
 
     this.iva_total = (this.form_data_sale.value.iva * this.subtotalSale)/100;
     this.total = +(this.iva_total + this.subtotalSale).toFixed(2);
-
+    
     this.listDetSale.push({
       id:'',
       prod_id: this.productSelected.id,
@@ -155,12 +159,16 @@ export class SaleComponent implements OnInit{
   }
 
   registerSale(){
-    
+    this.blockBottonRegister = false;
     this.iva_total = (this.form_data_sale.value.iva * this.subtotalSale)/100;
     this.total = +(this.iva_total + this.subtotalSale).toFixed(2);
-    const client = this.listClients.find(client => client.id === this.form_data_sale.value.cli_id);    
-    console.log(client!.balance)
-    if(this.listDetSale.length > 0 && client!.balance >= this.total){
+    const clientBalance = this.getClientFilter(this.form_data_sale.value.cli_id);
+
+    if(clientBalance === undefined){
+      return this._utilsService.showAlert("El cliente no existe", 'Error');
+    }
+    
+    if(this.listDetSale.length > 0 && clientBalance >= this.total){
         const sale: Sale = {
         id: '',
         date_joined: this.form_data_sale.value.data_joined,
@@ -180,7 +188,6 @@ export class SaleComponent implements OnInit{
             this.iva_total = 0.00;
             this.total = 0.00;
             this.listDetSale = [];
-            this.listClients = [];
             this.form_data_sale.reset();
             this.dataSale = new MatTableDataSource(this.listDetSale);
 
@@ -202,7 +209,7 @@ export class SaleComponent implements OnInit{
         }
       })
     }else{
-      if(this.form_data_sale.value.cli_id.balance < this.total)
+      if(clientBalance < this.total)
         this._utilsService.showAlert("El cliente no tiene suficiente saldo", 'Error');
     }
   }
