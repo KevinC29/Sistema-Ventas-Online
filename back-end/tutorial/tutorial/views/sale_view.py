@@ -146,7 +146,7 @@ def sale_create(request):
                     }, 
                     status=400
                 )
-        elif (data_values_sale[0] + iva_value) != data_values_sale[2]:
+        elif round((data_values_sale[0] + iva_value),2) != round(data_values_sale[2],2):
             return Response(
                     json={
                         'status': False,

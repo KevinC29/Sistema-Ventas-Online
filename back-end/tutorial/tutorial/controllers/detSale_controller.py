@@ -33,7 +33,7 @@ def validate_exist_product(request, prod_id):
         return validate_Product
 
 def validate_value_price_detSale(product, price):
-    if float(product.pvp) != round(float(price),2):
+    if round(float(product.pvp),2) != round(float(price),2):
         return True
     else:
         return False
@@ -45,7 +45,7 @@ def validate_value_stock_detSale(product, cant):
         return False
 
 def validate_value_subtotal_for_cant_detSale(product, cant, subtotal):
-    if float(product.pvp) * cant != round(float(subtotal),2):
+    if rount(float(product.pvp) * cant,2) != round(float(subtotal),2):
         return True
     else:    
         return False
