@@ -40,7 +40,7 @@ export class CategoryComponent implements OnInit, AfterViewInit{
         }
       },
       error: (error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     });
   }
@@ -106,7 +106,7 @@ export class CategoryComponent implements OnInit, AfterViewInit{
               }
             },
             error: (error) => {
-              this._utilsService.showAlert(error, 'Oops');
+              this._utilsService.showAlert('error', 'Oops');
             }
           });
         }

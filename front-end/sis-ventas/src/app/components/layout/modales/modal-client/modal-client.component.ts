@@ -84,7 +84,7 @@ export class ModalClientComponent implements OnInit{
             
           },
         error: (error) => {
-          this._utilsService.showAlert(error, 'Oops');
+          this._utilsService.showAlert('error', 'Oops');
         }
       })
     }else{
@@ -99,7 +99,7 @@ export class ModalClientComponent implements OnInit{
             
           },
         error: (error) => {
-          this._utilsService.showAlert(error, 'Oops');
+          this._utilsService.showAlert('error', 'Oops');
         }
       })
 

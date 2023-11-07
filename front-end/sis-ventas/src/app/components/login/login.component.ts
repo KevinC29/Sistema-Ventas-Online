@@ -46,19 +46,17 @@ export class LoginComponent implements OnInit {
 
     this._userService.login(request).subscribe({
       next:(response)=>{
-        console.log(response);
         if(response.status){
           this._utilsService.saveSesionUser(response.data);
           this.router.navigate(["pages"])
         }else{
-          console.log(response.msg)
           this._utilsService.showAlert(response.msg, "Opps!")
         }
       },
       complete: ()=>{
           this.show_loading = false;
       },
-      error: ()=>{
+      error: (error)=>{
         this._utilsService.showAlert("Existió un error", "Error");
       }
     })

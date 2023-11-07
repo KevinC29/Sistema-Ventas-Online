@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         }
       },
       error: (error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     });
   }
@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
               }
             },
             error: (error) => {
-              this._utilsService.showAlert(error, 'Oops');
+              this._utilsService.showAlert('error', 'Oops');
             }
           });
         }

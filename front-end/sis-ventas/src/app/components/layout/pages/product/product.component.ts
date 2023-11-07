@@ -41,7 +41,7 @@ export class ProductComponent implements OnInit, AfterViewInit{
         }
       },
       error: (error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     });
   }
@@ -108,7 +108,7 @@ export class ProductComponent implements OnInit, AfterViewInit{
               }
             },
             error: (error) => {
-              this._utilsService.showAlert(error, 'Oops');
+              this._utilsService.showAlert('error', 'Oops');
             }
           });
         }

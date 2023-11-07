@@ -49,7 +49,7 @@ export class ModalProductComponent implements OnInit{
         }
       },
       error: (error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     })
   }
@@ -87,7 +87,7 @@ export class ModalProductComponent implements OnInit{
             
           },
         error: (error) => {
-          this._utilsService.showAlert(error, 'Oops');
+          this._utilsService.showAlert('error', 'Oops');
         }
       })
     }else{
@@ -102,7 +102,7 @@ export class ModalProductComponent implements OnInit{
             
           },
         error: (error) => {
-          this._utilsService.showAlert(error, 'Oops');
+          this._utilsService.showAlert('error', 'Oops');
         }
       })
 

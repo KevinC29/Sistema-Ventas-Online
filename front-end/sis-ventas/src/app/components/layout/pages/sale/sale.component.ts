@@ -71,7 +71,7 @@ export class SaleComponent implements OnInit{
         }
       },
       error:(error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     })
 
@@ -82,7 +82,7 @@ export class SaleComponent implements OnInit{
         }
       },
       error: (error) => {
-        this._utilsService.showAlert(error, 'Oops');
+        this._utilsService.showAlert('error', 'Oops');
       }
     })
 
@@ -198,7 +198,7 @@ export class SaleComponent implements OnInit{
           this.blockBottonRegister = false;
         },
         error: (error) => {
-          this._utilsService.showAlert(error, 'Oops');
+          this._utilsService.showAlert('error', 'Oops');
         }
       })
     }else{
