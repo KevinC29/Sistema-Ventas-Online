@@ -45,7 +45,7 @@ def validate_value_stock_detSale(product, cant):
         return False
 
 def validate_value_subtotal_for_cant_detSale(product, cant, subtotal):
-    if rount(float(product.pvp) * cant,2) != round(float(subtotal),2):
+    if round(float(product.pvp) * cant,2) != round(float(subtotal),2):
         return True
     else:    
         return False
