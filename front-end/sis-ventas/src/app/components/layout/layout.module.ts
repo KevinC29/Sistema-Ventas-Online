@@ -8,6 +8,9 @@ import { ProductComponent } from './pages/product/product.component';
 import { SaleComponent } from './pages/sale/sale.component';
 import { ClientComponent } from './pages/client/client.component';
 import { SharedModule } from 'src/app/reusable/shared/shared.module';
+import { ModalClientComponent } from './modales/modal-client/modal-client.component';
+import { ModalCategoryComponent } from './modales/modal-category/modal-category.component';
+import { ModalProductComponent } from './modales/modal-product/modal-product.component';
 
 
 @NgModule({
@@ -16,7 +19,10 @@ import { SharedModule } from 'src/app/reusable/shared/shared.module';
     CategoryComponent,
     ProductComponent,
     SaleComponent,
-    ClientComponent
+    ClientComponent,
+    ModalClientComponent,
+    ModalProductComponent,
+    ModalCategoryComponent
   ],
   imports: [
     CommonModule,
