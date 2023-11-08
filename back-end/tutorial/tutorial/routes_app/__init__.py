@@ -1,6 +1,6 @@
 # En routes_app/__init__.py
 
-from . import category, client, product, sale  # Importa los módulos que contienen las rutas
+from . import category, client, product, sale, user  # Importa los módulos que contienen las rutas
 
 def includeme(config):
     # Llamando a las funciones includeme de cada módulo
@@ -8,3 +8,4 @@ def includeme(config):
     client.includeme(config)
     product.includeme(config)
     sale.includeme(config)
+    user.includeme(config)

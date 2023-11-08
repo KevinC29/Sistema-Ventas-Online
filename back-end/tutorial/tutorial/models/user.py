@@ -4,12 +4,12 @@ from sqlalchemy import (
     Integer,
     Text,
 )
-from enum import Enum
+# from enum import Enum
 from .meta import Base
 
-class RoleEnum(Enum):
-    PERSON = 'person'
-    ADMIN = 'admin'
+# class RoleEnum(Enum):
+#     PERSON = 'person'
+#     ADMIN = 'admin'
 
 class User(Base):
     __tablename__ = 'users'
@@ -31,7 +31,8 @@ class User(Base):
 
     def user_to_dict(self):
         return {
-            "id": str(self.id),  # Convertir UUID a una cadena para ser JSON serializable
+            "id": str(self.id),
             "name": self.name,
-            "role": self.role
+            "role": self.role,
+            "password_hash": self.password_hash
         }
