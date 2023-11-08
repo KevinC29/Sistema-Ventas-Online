@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Sesion } from '../interfaces/sesion';
+import { LoginService } from 'src/app/Services/login.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(
+    private _snackBar: MatSnackBar,
+    private _userService : LoginService,
+  ) { }
 
   showAlert(message: string, type: string) {
     this._snackBar.open(message,type,{
@@ -29,6 +33,17 @@ export class UtilsService {
   }
 
   deleteSesionUser(){
-    localStorage.removeItem("user");
+    this._userService.logout().subscribe({
+      next:(response)=>{
+        if(response.status){
+          localStorage.removeItem("user");
+        }else{
+          this.showAlert(response.msg, "Opps!")
+        }
+      },
+      error: (error)=>{
+        this.showAlert("Existió un error al deslogearse", "Error");
+      }
+    })
   }
 }

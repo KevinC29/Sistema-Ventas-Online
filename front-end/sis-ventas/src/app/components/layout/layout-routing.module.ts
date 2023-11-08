@@ -6,6 +6,7 @@ import { ProductComponent } from './pages/product/product.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { ClientComponent } from './pages/client/client.component';
 import { SaleComponent } from './pages/sale/sale.component';
+import { UserComponent } from './pages/user/user.component';
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
       { path: 'product', component: ProductComponent},
       { path: 'category', component: CategoryComponent},
       { path: 'client', component: ClientComponent},
-      { path: 'sale', component: SaleComponent}
+      { path: 'sale', component: SaleComponent},
+      { path: 'user', component: UserComponent}
     ]
   }
 ];

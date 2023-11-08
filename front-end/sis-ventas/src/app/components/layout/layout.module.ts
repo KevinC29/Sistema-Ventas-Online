@@ -7,10 +7,12 @@ import { CategoryComponent } from './pages/category/category.component';
 import { ProductComponent } from './pages/product/product.component';
 import { SaleComponent } from './pages/sale/sale.component';
 import { ClientComponent } from './pages/client/client.component';
+import { UserComponent } from './pages/user/user.component';
 import { SharedModule } from 'src/app/reusable/shared/shared.module';
 import { ModalClientComponent } from './modales/modal-client/modal-client.component';
 import { ModalCategoryComponent } from './modales/modal-category/modal-category.component';
 import { ModalProductComponent } from './modales/modal-product/modal-product.component';
+import { ModalUserComponent } from './modales/modal-user/modal-user.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { ModalProductComponent } from './modales/modal-product/modal-product.com
     ClientComponent,
     ModalClientComponent,
     ModalProductComponent,
-    ModalCategoryComponent
+    ModalCategoryComponent,
+    ModalUserComponent,
+    UserComponent,
   ],
   imports: [
     CommonModule,

@@ -4,35 +4,26 @@
         <button mat-icon-button (click)="sidenav.toggle();">
             <mat-icon>menu</mat-icon>
         </button>
+
+        <span style="flex: 1 1 auto;"></span>
+        <label style="font-size: 14px; margin-right: 20px;">
+        Usuario: {{ nameUser }} | Rol: {{ rolUser }}
+        </label>
+
+        <button mat-icon-button (click)="closeSesion()">
+            <mat-icon>logout</mat-icon>
+        </button>
+
     </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-sidenav-container>
     <mat-sidenav #sidenav opened="true" mode="side" style="width: 200px;">
         <mat-nav-list>
-            <mat-list-item class="list-item" routerLink="/pages/dashboard" style="height: 75px;">
-                <mat-icon mat-list-icon>dashboard</mat-icon>
-                <div class="list-text" mat-line>DashBoard</div>
-            </mat-list-item>
 
-            <mat-list-item class="list-item" routerLink="/pages/client" style="height: 75px;">
-                <mat-icon mat-list-icon>group</mat-icon>
-                <div class="list-text" mat-line>Clientes</div>
-            </mat-list-item>
-
-            <mat-list-item class="list-item" routerLink="/pages/category" style="height: 75px;">
-                <mat-icon mat-list-icon>category</mat-icon>
-                <div class="list-text" mat-line>Categorias</div>
-            </mat-list-item>
-
-            <mat-list-item class="list-item" routerLink="/pages/product" style="height: 75px;">
-                <mat-icon mat-list-icon>collections_bookmark</mat-icon>
-                <div class="list-text" mat-line>Productos</div>
-            </mat-list-item>
-
-            <mat-list-item class="list-item" routerLink="/pages/sale" style="height: 75px;">
-                <mat-icon mat-list-icon>currency_exchange</mat-icon>
-                <div class="list-text" mat-line>Ventas</div>
+            <mat-list-item *ngFor="let menu of listaMenu" [routerLink]="menu.url" style="height: 75px;">
+                <mat-icon mat-list-icon>{{menu.icono}}</mat-icon>
+                <div mat-line class="list-text">{{menu.name}}</div>
             </mat-list-item>
             
         </mat-nav-list>
